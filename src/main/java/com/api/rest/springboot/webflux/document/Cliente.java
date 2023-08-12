@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 //1.-Creamos el documento y añadimos la anotacion @Document
-@Document
+@Document(collection = "clientes")
 public class Cliente {
 
     //Agregamos los atributos
