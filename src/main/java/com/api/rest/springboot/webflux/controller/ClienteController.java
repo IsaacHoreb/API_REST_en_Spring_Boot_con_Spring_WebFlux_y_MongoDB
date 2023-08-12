@@ -42,5 +42,19 @@ public class ClienteController {
                         .contentType(MediaType.APPLICATION_JSON_UTF8).body(c));
     }
 
+    //Metodo para subir fotos
+    @PostMapping("/upload/{id}")
+    public Mono<ResponseEntity<Cliente>> subirFotos(@PathVariable String id, @RequestPart FilePart file) {
+        return clientesServices.findById(id).flatMap(c -> {
+            c.setFoto(UUID.randomUUID().toString() + "-" + file.filename()
+                    .replace(" ", "")
+                    .replace(":", "")
+                    .replace("//", ""));
+
+            return file.transferTo(new File(path + c.getFoto())).then(clientesServices.Save(c));
+        }).map(c -> ResponseEntity.ok(c)).defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    
 
 }
