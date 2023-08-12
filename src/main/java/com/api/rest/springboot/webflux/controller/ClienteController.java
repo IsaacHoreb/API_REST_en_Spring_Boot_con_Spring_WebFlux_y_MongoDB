@@ -11,8 +11,10 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import javax.swing.*;
 import java.io.File;
 import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -55,6 +57,13 @@ public class ClienteController {
         }).map(c -> ResponseEntity.ok(c)).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    
+    //Para obtener/ver detalles del Cliente
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<Cliente>> verDetallesDelCliente(@PathVariable String id) {
+        return clientesServices.findById(id).map(c -> ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON_UTF8).body(c)).defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+
 
 }
