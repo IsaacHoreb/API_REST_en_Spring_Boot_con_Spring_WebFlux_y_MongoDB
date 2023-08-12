@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.WebExchangeBindException;
-import org.springframework.web.server.WebExceptionHandler;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -108,5 +107,23 @@ public class ClienteController {
             }
         });
     }
+
+    //Edito/Modifica un Cliente
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<Cliente>> editarClientes(@RequestBody Cliente cliente, @PathVariable String id) {
+
+        return clientesServices.findById(id).flatMap(c -> {
+                    c.setNombre(cliente.getNombre());
+                    c.setApellidos(cliente.getApellidos());
+                    c.setEdad(cliente.getEdad());
+                    c.setSueldo(cliente.getSueldo());
+                    return clientesServices.Save(c);
+                }).map(c -> ResponseEntity.created(URI.create("/api/clientes/".concat(c.getId())))
+                        .contentType(MediaType.APPLICATION_JSON_UTF8).body(c))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+
+    }
+
+
 }
 
