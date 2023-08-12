@@ -124,6 +124,12 @@ public class ClienteController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Void>> eliminarCliente(@PathVariable String id) {
+        return clientesServices.findById(id).flatMap(c -> {
+            return clientesServices.delete(c).then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)));
+        }).defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
+    }
 
 }
 
