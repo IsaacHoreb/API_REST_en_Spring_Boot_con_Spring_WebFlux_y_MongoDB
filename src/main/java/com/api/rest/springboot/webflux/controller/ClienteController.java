@@ -3,17 +3,21 @@ package com.api.rest.springboot.webflux.controller;
 
 import com.api.rest.springboot.webflux.document.Cliente;
 import com.api.rest.springboot.webflux.services.ClientesServices;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.swing.*;
 import java.io.File;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -57,6 +61,12 @@ public class ClienteController {
         }).map(c -> ResponseEntity.ok(c)).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @GetMapping
+    public Mono<ResponseEntity<Flux<Cliente>>> listarClientes() {
+        return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(clientesServices.findAll()));
+    }
+
+
     //Para obtener/ver detalles del Cliente
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Cliente>> verDetallesDelCliente(@PathVariable String id) {
@@ -64,6 +74,5 @@ public class ClienteController {
                 .contentType(MediaType.APPLICATION_JSON_UTF8).body(c)).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-
-
+    
 }
