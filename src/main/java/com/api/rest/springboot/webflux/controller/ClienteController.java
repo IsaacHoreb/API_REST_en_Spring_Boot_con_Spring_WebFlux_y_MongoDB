@@ -43,7 +43,7 @@ public class ClienteController {
                 .replace("//", ""));
 
         return file.transferTo(new File(path + cliente.getFoto())).then(clientesServices.Save(cliente))
-                .map(c -> ResponseEntity.created(URI.create("/api/clientes".concat(c.getId())))
+                .map(c -> ResponseEntity.created(URI.create("/api/clientes/".concat(c.getId())))
                         .contentType(MediaType.APPLICATION_JSON_UTF8).body(c));
     }
 
